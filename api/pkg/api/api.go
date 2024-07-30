@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
   
-	"github.com/google/uuid"
   "github.com/rs/cors"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
@@ -32,14 +31,14 @@ func (s *APIServer) Run() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
-	router.HandleFunc("/sign-up", withJWTAuth(makeHTTPHandleFunc(s.handleSignUp), s.store))
+	router.HandleFunc("/sign-up", makeHTTPHandleFunc(s.handleSignUp))
 	router.HandleFunc("/delete-account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleDeleteAccount), s.store))
 	
   router.HandleFunc("/software/id/{software-id}", makeHTTPHandleFunc(s.handleGetSoftwareByID))
   router.HandleFunc("/software/{software-id}", withJWTAuth(makeHTTPHandleFunc(s.handleSoftware), s.store))
   router.HandleFunc("/software", makeHTTPHandleFunc(s.handleGetSoftware))
   
-  router.HandleFunc("/software-likes/{software-id}/user/{user-id}", withJWTAuth(makeHTTPHandleFunc(s.handleSoftwareLike), s.store))
+  router.HandleFunc("/software-likes/{software-id}/user/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleSoftwareLike), s.store))
   router.HandleFunc("/software-likes/{software-id}", makeHTTPHandleFunc(s.handleGetSoftwareLikesByID))
 
 	log.Println("JSON API server running on port: ", s.listenAddr)
@@ -105,7 +104,6 @@ func withJWTAuth(handlerFunc http.HandlerFunc, s storage.Storage) http.HandlerFu
 		claims := token.Claims.(jwt.MapClaims)
 
     type Request struct {
-      UserID       uuid.UUID   `json:"userId"`
       Username     string      `json:"username"`
     }
     req := new(Request)
@@ -114,7 +112,7 @@ func withJWTAuth(handlerFunc http.HandlerFunc, s storage.Storage) http.HandlerFu
       return
     }
 
-		if req.Username != claims["username"] && req.UserID != claims["userID"] {
+		if req.Username != claims["username"] {
 			permissionDenied(w)
 			return
 		}

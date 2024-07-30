@@ -7,28 +7,29 @@ import (
 )
 
 type SoftwareLikeRequest struct {
-	SoftwareID   uuid.UUID   `json:"softwareId"`
-	UserID       uuid.UUID   `json:"userId"`
-	Username     string      `json:"username"`
+	SoftwareID   string    `json:"softwareId"`
+	Username     string    `json:"username"`
 }
 
 type CreateSoftwareLikeRequest struct {
-	SoftwareID   uuid.UUID   `json:"softwareId"`
-	UserID       uuid.UUID   `json:"userId"`
-	Username     string      `json:"username"`
+	SoftwareID   string   `json:"softwareId"`
+	Username     string   `json:"username"`
 }
 
 type SoftwareLike struct {
 	SoftwareID   uuid.UUID   `json:"softwareId"`
-	UserID       uuid.UUID   `json:"userId"`
 	Username     string      `json:"username"`
 	LikedAt      time.Time   `json:"likedAt"`
 }
 
-func NewSoftwareLike(softwareId, userId uuid.UUID, username string) (*SoftwareLike, error) {
+func NewSoftwareLike(softwareId, username string) (*SoftwareLike, error) {
+  softwareUuid, err := uuid.Parse(softwareId)
+  if err != nil {
+	  return nil, err	
+	}
+
 	return &SoftwareLike{
-    SoftwareID:   softwareId,
-    UserID:       userId,
+    SoftwareID:   softwareUuid,
     Username:     username,
 		LikedAt:      time.Now().UTC(),
 	}, nil

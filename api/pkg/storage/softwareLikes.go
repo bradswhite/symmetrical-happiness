@@ -53,7 +53,7 @@ func scanIntoSoftwareLikes(rows *sql.Rows) (*types.SoftwareLike, error) {
 	return softwareLike, err
 }
 
-func (s *PostgresStore) DeleteSoftwareLike(softwareId, userId string) error {
-	_, err := s.db.Query("DELETE FROM softwareLikes WHERE userID = $1 and softwareID = $2", userId, softwareId)
+func (s *PostgresStore) DeleteSoftwareLike(softwareId, username string) error {
+	_, err := s.db.Query("DELETE FROM softwareLikes WHERE username = $1 and softwareID = $2", username, softwareId)
 	return err
 }

@@ -49,11 +49,11 @@ func (s *APIServer) handleCreateSoftwareLike(w http.ResponseWriter, r *http.Requ
 
 func (s *APIServer) handleDeleteSoftwareLike(w http.ResponseWriter, r *http.Request) error {
   softwareId := getID(r, "software-id")
-	userId := getID(r, "user-id")
+	username := getID(r, "username")
 
-	if err := s.store.DeleteSoftwareLike(softwareId, userId); err != nil {
+	if err := s.store.DeleteSoftwareLike(softwareId, username); err != nil {
 		return err
 	}
 
-	return WriteJSON(w, http.StatusOK, map[string]string{"like deleted": userId})
+	return WriteJSON(w, http.StatusOK, map[string]string{"like deleted": username})
 }

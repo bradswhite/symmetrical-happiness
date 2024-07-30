@@ -14,15 +14,13 @@ CREATE TABLE IF NOT EXISTS software (
   description TEXT NOT NULL,
   image TEXT NOT NULL,
   url TEXT NOT NULL,
-  user_id UUID,
-  username TEXT,
+  username TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(name, title)
 );
 
 CREATE TABLE IF NOT EXISTS software_likes (
   software_id UUID NOT NULL,
-  user_id UUID NOT NULL,
   username text NOT NULL, 
   liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(software_id, username)

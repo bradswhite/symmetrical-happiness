@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+  "log"
 	"net/http"
   
   types "api/pkg/types"
@@ -41,16 +42,24 @@ func (s *APIServer) handleGetSoftwareByID(w http.ResponseWriter, r *http.Request
 }
 
 func (s *APIServer) handleCreateSoftware(w http.ResponseWriter, r *http.Request) error {
-	req := new(types.CreateSoftwareRequest)
-	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+  var req types.CreateSoftwareRequest
+  //req := new(types.CreateSoftwareRequest)
+
+  // CODE FAILS BELOW (yields EOF error) because res body is decoder twice; once here and once in api.go withJWTAuth function.
+  // ???
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+  if err != nil {
+    log.Fatal(err)
 		return err
 	}
-  
-	software, err := types.NewSoftware(req.Name, req.Title, req.Description, req.Image, req.Url, req.UserID, req.Username)
+  // ABOVE THIS CODE IS THE ERROR !!!
+
+	software, err := types.NewSoftware(req.Name, req.Title, req.Description, req.Image, req.Url, req.Username)
 	if err != nil {
 		return err
 	}
-	if err := s.store.CreateSoftware(software); err != nil {
+	if err = s.store.CreateSoftware(software); err != nil {
 		return err
 	}
 

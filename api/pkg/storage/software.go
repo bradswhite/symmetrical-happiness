@@ -10,7 +10,7 @@ import (
 
 func (s *PostgresStore) CreateSoftware(software *types.Software) error {
 	query := `INSERT INTO software
-	(name, title, description, image, url, user_id, username)
+	(name, title, description, image, url, username)
 	VALUES ($1, $2, $3, $4, $5, $6, $7);`
 
 	_, err := s.db.Query(
@@ -21,7 +21,6 @@ func (s *PostgresStore) CreateSoftware(software *types.Software) error {
 		software.Image,
 		software.Url,
 		//pq.Array(Software.Alts),
-		software.UserID,
 		software.Username)
 
 	if err != nil {
@@ -72,7 +71,6 @@ func scanIntoSoftware(rows *sql.Rows) (*types.Software, error) {
 		&software.Description,
 		&software.Image,
 		&software.Url,
-		&software.UserID,
 		&software.Username,
 		&software.CreatedAt)
 

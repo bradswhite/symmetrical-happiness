@@ -7,7 +7,6 @@ import (
   "os"
 
   "github.com/joho/godotenv"
-	"github.com/google/uuid"
   api "api/pkg/api"
   storage "api/pkg/storage"
   types "api/pkg/types"
@@ -33,12 +32,8 @@ func seedUsers(s storage.Storage) {
 	seedUser(s, "tom", "tom@gmail.com", "password")
 }
 
-func seedSoftware(store storage.Storage, name, title, description, image, url, userId, username string) *types.Software {
-  id, err := uuid.Parse(userId)
-	if err != nil {
-		log.Fatal(err)
-	}
-	software, err := types.NewSoftware(name, title, description, image, url, id, username)
+func seedSoftware(store storage.Storage, name, title, description, image, url, username string) *types.Software {
+	software, err := types.NewSoftware(name, title, description, image, url, username)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,9 +48,9 @@ func seedSoftware(store storage.Storage, name, title, description, image, url, u
 }
 
 func seedSoftwares(s storage.Storage) {
-  seedSoftware(s, "brave", "Brave Browser", "Secure, fast and private web browser with adblocker.", "brave-logo.svg", "https://www.brave.com", "550e8400-e29b-41d4-a716-446655440000", "tom")
-  seedSoftware(s, "session", "Session", "End-to-end encrypted messenger that minimises sensitive metadata, designed and built for people who want absolute privacy and freedom from any form of surveillance.", "Session_Logo.svg", "https://www.getsession.org", "550e8400-e29b-41d4-a716-446655440000", "tom")
-  seedSoftware(s, "telegram", "Telegram Messenger", "Cloud-based, cross-platform, encrypted instant messaging (IM) service","Telegram_logo.svg", "https://www.telegram.org", "550e8400-e29b-41d4-a716-446655440000", "tom")
+  seedSoftware(s, "brave", "Brave Browser", "Secure, fast and private web browser with adblocker.", "brave-logo.svg", "https://www.brave.com", "tom")
+  seedSoftware(s, "session", "Session", "End-to-end encrypted messenger that minimises sensitive metadata, designed and built for people who want absolute privacy and freedom from any form of surveillance.", "Session_Logo.svg", "https://www.getsession.org", "tom")
+  seedSoftware(s, "telegram", "Telegram Messenger", "Cloud-based, cross-platform, encrypted instant messaging (IM) service","Telegram_logo.svg", "https://www.telegram.org", "tom")
 }
 
 func main() {
