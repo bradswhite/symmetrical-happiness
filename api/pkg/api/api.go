@@ -3,11 +3,13 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+  "bytes"
+  "io"
 	"log"
   "strings"
 	"net/http"
 	"os"
-  
+
   "github.com/rs/cors"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
@@ -35,6 +37,7 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/delete-account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleDeleteAccount), s.store))
 	
   router.HandleFunc("/software/id/{software-id}", makeHTTPHandleFunc(s.handleGetSoftwareByID))
+  router.HandleFunc("/add-software", withJWTAuth(makeHTTPHandleFunc(s.handleCreateSoftware), s.store))
   router.HandleFunc("/software/{software-id}", withJWTAuth(makeHTTPHandleFunc(s.handleSoftware), s.store))
   router.HandleFunc("/software", makeHTTPHandleFunc(s.handleGetSoftware))
   
@@ -104,26 +107,55 @@ func withJWTAuth(handlerFunc http.HandlerFunc, s storage.Storage) http.HandlerFu
 		claims := token.Claims.(jwt.MapClaims)
 
     type Request struct {
-      Username     string      `json:"username"`
+      Username      string    `json:"username"`
     }
-    req := new(Request)
-    if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			permissionDenied(w)
+    if r.Body != nil {
+      body, req, err := GetBodyData[Request](r)
+      if err != nil {
+        permissionDenied(w)
+        return
+      }
+      
+      if req.Username != claims["username"]	{
+        permissionDenied(w)
+			  return
+		  }
+
+      r.Body = io.NopCloser(bytes.NewBuffer(body))
+    } else if getID(r, "username") != claims["username"] {
+      permissionDenied(w)
       return
     }
-
-		if req.Username != claims["username"] {
-			permissionDenied(w)
-			return
-		}
 
 		if err != nil {
 			WriteJSON(w, http.StatusForbidden, ApiError{Error: "invalid token"})
 			return
 		}
+		
+    handlerFunc(w, r)
 
-		handlerFunc(w, r)
+    defer r.Body.Close()
 	}
+}
+
+func GetBodyData[T any](r *http.Request) ([]byte, *T, error) {
+  if r.Body == nil {
+    return nil, nil, fmt.Errorf("body missing data")
+  }
+  req := new(T)
+  body, err := io.ReadAll(r.Body)
+  if err != nil {
+    return nil, nil, err
+  }
+  
+  rdr1 := body
+  rdr2 := body
+  
+  err = json.Unmarshal(rdr1, &req)
+  if err != nil {
+    return nil, nil, err
+  }
+  return rdr2, req, nil
 }
 
 func validateJWT(tokenString string) (*jwt.Token, error) {

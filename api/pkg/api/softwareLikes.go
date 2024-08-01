@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
   
@@ -30,12 +29,14 @@ func (s *APIServer) handleSoftwareLike(w http.ResponseWriter, r *http.Request) e
 }
 
 func (s *APIServer) handleCreateSoftwareLike(w http.ResponseWriter, r *http.Request) error {
-	req := new(types.CreateSoftwareLikeRequest)
-	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-		return err
-	}
-
-  like, err := types.NewSoftwareLike(req.SoftwareID, req.UserID, req.Username)
+  /*_, req, err := GetBodyData[types.CreateSoftwareLikeRequest](r)
+  if err != nil {
+    return err
+  }*/
+  softwareId := getID(r, "software-id")
+	username := getID(r, "username")
+  //like, err := types.NewSoftwareLike(req.SoftwareID, req.Username)
+  like, err := types.NewSoftwareLike(softwareId, username)
 	if err != nil {
 		return err
 	}
@@ -50,8 +51,8 @@ func (s *APIServer) handleCreateSoftwareLike(w http.ResponseWriter, r *http.Requ
 func (s *APIServer) handleDeleteSoftwareLike(w http.ResponseWriter, r *http.Request) error {
   softwareId := getID(r, "software-id")
 	username := getID(r, "username")
-
-	if err := s.store.DeleteSoftwareLike(softwareId, username); err != nil {
+	
+  if err := s.store.DeleteSoftwareLike(softwareId, username); err != nil {
 		return err
 	}
 

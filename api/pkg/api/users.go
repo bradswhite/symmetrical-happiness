@@ -65,7 +65,7 @@ func (s *APIServer) handleSignUp(w http.ResponseWriter, r *http.Request) error {
 func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) error {
 	id := getID(r, "username")
 
-	if err := s.store.DeleteUser(id); err != nil {
+  if err := s.store.DeleteUser(id); err != nil {
 		return err
 	}
 

@@ -8,7 +8,7 @@ import (
 )
 
 func (s *PostgresStore) CreateSoftwareLike(softwareLike *types.SoftwareLike) error {
-	query := `INSERT INTO softwareLikes 
+	query := `INSERT INTO software_likes 
 	(software_id, username)
 	VALUES ($1, $2);`
 
@@ -25,7 +25,7 @@ func (s *PostgresStore) CreateSoftwareLike(softwareLike *types.SoftwareLike) err
 }
 
 func (s *PostgresStore) GetSoftwareLikesBySoftware(softwareId string) ([]*types.SoftwareLike, error) {
-	rows, err := s.db.Query("SELECT * from softwareLikes WHERE software_id = $1;", softwareId)
+	rows, err := s.db.Query("SELECT * from software_likes WHERE software_id = $1;", softwareId)
 	if err != nil {
     fmt.Println(err)
 		return nil, err
@@ -54,6 +54,6 @@ func scanIntoSoftwareLikes(rows *sql.Rows) (*types.SoftwareLike, error) {
 }
 
 func (s *PostgresStore) DeleteSoftwareLike(softwareId, username string) error {
-	_, err := s.db.Query("DELETE FROM softwareLikes WHERE username = $1 and softwareID = $2", username, softwareId)
+	_, err := s.db.Query("DELETE FROM software_likes WHERE username = $1 and softwareID = $2", username, softwareId)
 	return err
 }

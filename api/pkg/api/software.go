@@ -1,11 +1,9 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-  "log"
 	"net/http"
-  
+
   types "api/pkg/types"
 )
 
@@ -19,9 +17,7 @@ func (s *APIServer) handleGetSoftware(w http.ResponseWriter, r *http.Request) er
 }
 
 func (s *APIServer) handleSoftware(w http.ResponseWriter, r *http.Request) error {
-  if r.Method == "POST" {
-    return s.handleCreateSoftware(w, r)
-  } else if r.Method == "PUT" {
+  if r.Method == "PUT" {
     return s.handleUpdateSoftware(w, r)
   } else if r.Method == "DELETE" {
     return s.handleDeleteSoftware(w, r)
@@ -42,20 +38,11 @@ func (s *APIServer) handleGetSoftwareByID(w http.ResponseWriter, r *http.Request
 }
 
 func (s *APIServer) handleCreateSoftware(w http.ResponseWriter, r *http.Request) error {
-  var req types.CreateSoftwareRequest
-  //req := new(types.CreateSoftwareRequest)
-
-  // CODE FAILS BELOW (yields EOF error) because res body is decoder twice; once here and once in api.go withJWTAuth function.
-  // ???
-
-	err := json.NewDecoder(r.Body).Decode(&req)
+  _, req, err := GetBodyData[types.CreateSoftwareRequest](r)
   if err != nil {
-    log.Fatal(err)
-		return err
-	}
-  // ABOVE THIS CODE IS THE ERROR !!!
-
-	software, err := types.NewSoftware(req.Name, req.Title, req.Description, req.Image, req.Url, req.Username)
+    return err
+  }
+  software, err := types.NewSoftware(req.Name, req.Title, req.Description, req.Image, req.Url, req.Username)
 	if err != nil {
 		return err
 	}
@@ -67,7 +54,15 @@ func (s *APIServer) handleCreateSoftware(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *APIServer) handleUpdateSoftware(w http.ResponseWriter, r *http.Request) error {
-  return nil
+  _, req, err := GetBodyData[types.UpdateSoftwareRequest](r)
+  if err != nil {
+    return err
+  }
+	if err = s.store.UpdateSoftware(getID(r, "software-id"), req); err != nil {
+		return err
+	}
+
+	return WriteJSON(w, http.StatusOK, req)
 }
 
 func (s *APIServer) handleDeleteSoftware(w http.ResponseWriter, r *http.Request) error {

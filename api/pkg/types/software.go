@@ -30,6 +30,14 @@ type Software struct {
 	CreatedAt     time.Time `json:"createdAt"`
 }
 
+type UpdateSoftwareRequest struct {
+  Name          string    `json:"name"`
+  Title         string    `json:"title"`
+  Description   string    `json:"description"`
+  Image         string    `json:"image"`
+  Url           string    `json:"url"`
+}
+
 func NewSoftware(name, title, description, image, url, username string) (*Software, error) {
 	return &Software{
     Name:              name,

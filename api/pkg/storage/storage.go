@@ -20,7 +20,7 @@ type Storage interface {
   CreateSoftware(*types.Software) error
   GetSoftware() ([]*types.Software, error)
   GetSoftwareByID(string) (*types.Software, error)
-	UpdateSoftware(*types.Software) error
+	UpdateSoftware(string, *types.UpdateSoftwareRequest) error
 	DeleteSoftware(string) error
 
   CreateSoftwareLike(*types.SoftwareLike) error

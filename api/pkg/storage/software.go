@@ -11,7 +11,7 @@ import (
 func (s *PostgresStore) CreateSoftware(software *types.Software) error {
 	query := `INSERT INTO software
 	(name, title, description, image, url, username)
-	VALUES ($1, $2, $3, $4, $5, $6, $7);`
+	VALUES ($1, $2, $3, $4, $5, $6);`
 
 	_, err := s.db.Query(
 		query,
@@ -77,7 +77,23 @@ func scanIntoSoftware(rows *sql.Rows) (*types.Software, error) {
 	return software, err
 }
 
-func (s *PostgresStore) UpdateSoftware(*types.Software) error {
+func (s *PostgresStore) UpdateSoftware(softwareId string, software *types.UpdateSoftwareRequest) error {
+	query := `UPDATE software
+    SET name=$2, title=$3, description=$4, image=$5, url=$6
+    WHERE id=$1;`
+
+	_, err := s.db.Exec(
+		query,
+    softwareId,
+		software.Name,
+		software.Title,
+		software.Description,
+		software.Image,
+		software.Url)
+	if err != nil {
+		return err
+	}
+ 
 	return nil
 }
 
