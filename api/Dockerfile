@@ -11,8 +11,6 @@ RUN go mod download
 
 COPY api/. .
 
-RUN go build -o main cmd/main.go
-
 EXPOSE 3001
 
 CMD ["air", "-c", ".air.toml"]
