@@ -30,7 +30,8 @@ func NewAPIServer(listenAddr string, store storage.Storage) *APIServer {
 }
 
 func (s *APIServer) Run() {
-	router := mux.NewRouter()
+	r := mux.NewRouter()
+  router := r.PathPrefix("/api").Subrouter()
 
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 	router.HandleFunc("/sign-up", makeHTTPHandleFunc(s.handleSignUp))
@@ -47,7 +48,7 @@ func (s *APIServer) Run() {
 	log.Println("JSON API server running on port: ", s.listenAddr)
 
   c := cors.New(cors.Options{
-    AllowedOrigins: []string{"http://localhost:4321"},
+    AllowedOrigins: []string{"http://localhost:" + os.Getenv("WEB_PORT")},
     AllowedMethods: []string{
       http.MethodGet,
       http.MethodPost,

@@ -1,0 +1,16 @@
+.env
+
+api/go.sum
+
+web/node_modules/
+web/dist/
+web/.astro/
+
+# logs
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/pnpm-debug.log*
+
+# macOS-specific files
+.DS_Store

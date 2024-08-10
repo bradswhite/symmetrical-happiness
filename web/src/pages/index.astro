@@ -1,0 +1,32 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Hero from '@components/Hero.astro';
+import SoftwareList from '@components/software/SoftwareList.svelte';
+//import Categories from '@components/categories/Categories.astro';
+// import Ads from '@components/ads/Ads.astro';
+
+//import AccountInfo from '@components/AccountInfo.astro';
+---
+
+<Layout title='Exit Tech' desc='...'>
+  <Hero />
+
+  <!--<AccountInfo />-->
+
+  <div class='flex'>
+    <div class='w-[70%] px-4'>
+      <SoftwareList client:load />
+    </div>
+    <div class='w-[30%] px-4'>
+      <div class='grid gap-4'>
+        <!--<div class='py-4'>
+          <Categories />
+        </div>-->
+        <!--<div class='grid gap-4 py-4'>
+          <Ads />
+        </div>  -->
+      </div>
+    </div>
+  </div>
+  <!-- <BlogPosts />-->
+</Layout>

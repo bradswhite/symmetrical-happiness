@@ -36,5 +36,4 @@ build for prod...
 
 
 ### Notes:
-- ADD CRUD UPDATE FEATURES (WHEN APPLICATABLE) THROUGHTOUT THE APP
 - Make sure user can only like themselves, delete etc their posts

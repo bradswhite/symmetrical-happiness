@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_HOST: ${DB_HOST}
+  web:
+    image: exittech-web
+    ports:
+      - 8080:4321
+  api:
+    image: exittech-api

@@ -1,0 +1,7 @@
+---
+const { name } = Astro.props;
+---
+
+<div x-show={`navigationMenu == '${name}'`} class="flex items-stretch justify-center w-full p-6">
+  <slot />
+</div>

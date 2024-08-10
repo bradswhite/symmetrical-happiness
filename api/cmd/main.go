@@ -54,7 +54,7 @@ func seedSoftwares(s storage.Storage) {
 }
 
 func main() {
-  err := godotenv.Load()
+  err := godotenv.Load("../.env")
   if err != nil {
     log.Fatal("Error loading .env file")
   }
@@ -75,7 +75,7 @@ func main() {
 		seedSoftwares(store)
 	}
 
-  port := os.Getenv("PORT")
+  port := os.Getenv("API_PORT")
   if port == "" {
     port = "3000"
   }
