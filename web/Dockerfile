@@ -2,11 +2,14 @@ FROM node:22-alpine AS base
 
 WORKDIR /web
 
-COPY package*.json .
+COPY .env .
+
+COPY web/package*.json web/pnpm-lock.yaml .
 RUN npm install -g pnpm
 RUN pnpm i
 
-COPY . .
+COPY web/. .
+
 RUN pnpm build
 
 ENV HOST=0.0.0.0

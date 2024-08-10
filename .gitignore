@@ -1,7 +1,9 @@
 .env
 
 api/go.sum
+api/.env
 
+web/.env
 web/node_modules/
 web/dist/
 web/.astro/

@@ -1,16 +1,18 @@
 FROM golang:1.22-alpine
 
-WORKDIR /api/app
+WORKDIR /api
 
 RUN go install github.com/air-verse/air@latest
 
-COPY go.* ./
+COPY .env .
+
+COPY api/go.* ./
 RUN go mod download
 
-COPY . .
+COPY api/. .
 
 RUN go build -o main cmd/main.go
 
-EXPOSE ${API_PORT}
+EXPOSE 3001
 
 CMD ["air", "-c", ".air.toml"]

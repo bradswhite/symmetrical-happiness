@@ -1,7 +1,7 @@
 [build]
   cmd = "go build -o main cmd/main.go"
   bin = "main"
-  dir = "api/."
+  dir = "."
   include_ext = ["go"]
   exclude_dir = ["vendor"]
   run_after_build = "chmod +x main"

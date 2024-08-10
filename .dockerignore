@@ -1,3 +1,6 @@
 .DS_Store
+api/README.md
+
 web/node_modules
 web/dist
+web/README.md
